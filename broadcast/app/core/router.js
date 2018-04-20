@@ -4,22 +4,22 @@
 * */
 const fs = require('fs');
 const jade = require('jade');
+const httpParam = require('./httpParam');
 
 let Until = {
     init (url, req) {
         "use strict";
         this.url = url;
-        this.req = req;
-        return this.getRes(url);
+        return this.getRes(url, req);
 
     },
-    getRes(url) {
+    getRes(url, req) {
         "use strict";
         url = url.toString();
         if (url.includes('.html') || (!url.includes('.') && !url.includes('/api/'))) { // 页面
             return this.renderHtml();
         } else if (url.includes('/api/')) { // api
-            return this.renderApi();
+            return this.renderApi(req);
         } else if (url.includes('.')){
             return this.renderRrsource(); // 静态资源
         }
@@ -52,9 +52,8 @@ let Until = {
     },
 
     // 接口
-    renderApi () {
-        console.log(this.url)
-        console.log(this.req)
+    renderApi (req) {
+       return httpParam.getPostParam(req);
     },
     // 检测文件是否存在 存在则返回文件
     renderFile (filename, num){

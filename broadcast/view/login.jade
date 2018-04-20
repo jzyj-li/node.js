@@ -3,7 +3,7 @@ block link
     link(href='/static/css/signin.css',rel="stylesheet")
 block content
     div.text-center.body
-        form.form-signin
+        form.form-signin(method='post')
             h1.h3.mb-3 在线聊天系统
             label(for='inputEmail').sr-only 账号
             input(type='text',placeholder='账号')#inputEmail.form-control
