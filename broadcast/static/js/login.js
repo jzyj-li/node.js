@@ -23,9 +23,14 @@
            type: 'post',
            data: param,
            success: function (res) {
-               console.log(res)
+               if (res.success) {
+                   location.href = '/index';
+               } else {
+                   alert(res.data)
+               }
            }
        })
    }
 
+    submit()
 })()

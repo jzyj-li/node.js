@@ -2,13 +2,10 @@
 * api
 * */
 
-const API = '/api/'
-
-// 登录
-export login = `${API}/login`;
-
 // 返回参数格式
-export const RESPONSE = {
+exports.RESPONSE =   {
     success: true,
     data: '',
 }
+
+// cookie 过期时间

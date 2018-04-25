@@ -5,15 +5,13 @@
 
 const qs = require('querystring');
 
-let obj = {type: 'application/json', response: };
+let obj = {type: 'application/json'};
 
 class HttpParam{
     getParam(req) {
-        console.log(21)
-        console.log(req.method)
-        console.log(req.body)
-
-        // req.method == 'POST'? this.getPostParam(req): this.getGetParam(req);
+        let ret;
+        ret = req.method == 'POST'? this.getPostParam(req): this.getGetParam(req);
+        return ret;
     }
 
     // 获取post请求参数
@@ -22,14 +20,19 @@ class HttpParam{
         let body = '';
 
         return new Promise((reslove, reject) => {
-            req.on('data', (data) => {
-                body += data;
-            });
+            try {
+                req.on('data', (data) => {
+                    body += data;
+                });
 
-            req.on('end', () => {
-                obj.response = parse(body);
-                reslove(obj)
-            })
+                req.on('end', () => {
+                    obj.response = qs.parse(body);
+                    reslove(obj);
+                })
+            } catch (err) {
+                reject(err)
+            }
+
         })
     }
 
