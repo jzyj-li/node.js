@@ -3,8 +3,10 @@
 * */
 const ProcessFile = require('../core/ProcessFile');
 const ProcessCrypto = require('../core/ProcessCrypto');
-const conf = require('../../conf/api');
 const qs = require('querystring');
+
+const conf = require('../../conf/api');
+const Session = require('../core/session')
 
 const LOGIN_STR = 'zxltxt';
 
@@ -89,12 +91,14 @@ module.exports = class Login {
         return return_str;
     };
     autoLogin (str) {
-        let account = ProcessCrypto.decrypt(LOGIN_STR, str);
+
+        let account = str?ProcessCrypto.decrypt(LOGIN_STR, str): '';
         let index = account.substr(account.indexOf('@') + 1);
         account = account.substr(0, account.indexOf('@'));
 
         return new Promise ((reslove, reject) => {
-            ProcessFile.isExist(global.DATABASE + 'user.txt').then(res => {
+
+            account&& ProcessFile.isExist(global.DATABASE + 'user.txt').then(res => {
                 res.data = res.data.toString();
                 let data = res.data?JSON.parse(res.data):[];
                 if (data[index].account === account) {
@@ -105,12 +109,26 @@ module.exports = class Login {
                         reslove(conf.RESPONSE);
                     })
                 } else {
-                    conf.RESPONSE.success = false;
-                    conf.RESPONSE.data = '没有账号请注册';
-                    reslove(conf.RESPONSE);
+                    this.accountErrorHandle(reslove);
                 }
             })
+
+            !account && this.accountErrorHandle(reslove)
         })
+    };
+
+    // 账号错误 或没有
+    accountErrorHandle (reslove) {
+        conf.RESPONSE.success = false;
+        conf.RESPONSE.data = '没有账号请注册';
+        reslove(conf.RESPONSE)
+    };
+
+    // 登录成功
+    loginSuccess (userName) {
+        // 用户存入session socket建立
+        Session.push(userName)
+        
     }
 
 

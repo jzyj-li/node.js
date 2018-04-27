@@ -1,0 +1,10 @@
+.container {
+    margin: 0 auto;
+    margin-top: 100px;
+    padding-top: 50px;
+    min-height: 500px;
+    border: 1px solid black;
+}
+.page-content{
+    margin-top: 50px;
+}

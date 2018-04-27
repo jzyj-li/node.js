@@ -1,3 +1,15 @@
 extends header
+block link
+    link(href='/static/css/index.css',rel="stylesheet")
 block content
-    h1 首页
+    .container
+        .page-header
+            h1 聊天室
+                small 穷人版
+        .page-content
+            .media
+                .media-left
+                    a
+                        img.media-object
+                .media-body
+                    h4.media-heading 好友： 李世民

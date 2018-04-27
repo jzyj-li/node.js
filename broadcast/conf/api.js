@@ -8,4 +8,5 @@ exports.RESPONSE =   {
     data: '',
 }
 
-// cookie 过期时间
+// 端口
+exports.port = 2000;
