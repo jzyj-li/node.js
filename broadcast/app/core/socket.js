@@ -2,32 +2,38 @@
 *
 * socket
 * */
-const io = require('socket.io').listen(global.PORT);
+const io = require('socket.io')(global.APP);
+let currentUserList = [];
+let sockedIdToUserList = {};
 
 class Socket {
     init () {
+        /*
+        *
+        * on 是监听消息
+        * emit 发送消息
+        * 客户端发送服务端监听 或者服务端监听客户端发送不能同时监听一个接口
+        * */
         io.sockets.on('connection', (socket) => {
+            console.log(socket.id)
+            // 发送当前存在的所有用户
+
 
             // 新消息
-            socket.on('new message ', (data) => {
-
-                socket.broadcast.emit('new message', {
-                    userName: socket.userName,
-                    message: data
-                })
-
+            socket.on('new message', (data) => {
+                console.log(data)
+                socket.broadcast.to(sockedIdToUserList[data.accept]).emit('new message', data);
             })
 
             // 新增联系人
             socket.on('add user', (username) => {
 
-                socket.userName = username;
+                currentUserList.indexOf(username) > -1? null: currentUserList.push(username);
+                io.sockets.emit('all user', currentUserList)
 
-                socket.emit('login', {userName})
+                !(username in sockedIdToUserList) && (sockedIdToUserList[username] = socket.id);
 
-                socket.broadcast.emit(' user joined ', {
-                    userName: socket.userName
-                })
+                console.log(sockedIdToUserList)
 
             })
 
@@ -37,3 +43,5 @@ class Socket {
     }
 
 }
+
+module.exports = Socket

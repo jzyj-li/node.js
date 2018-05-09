@@ -31,14 +31,20 @@ module.exports = class Login {
 
                     if (!obj.type) { // 新注册的账号
                         user_mes.oldDate = new Date().getTime();
+                        user_mes.userId = new Date().getTime();
                         data.push(user_mes);
                     } else { // 已经注册的账号
                         data[obj.index].oldDate = new Date().getTime();
                     }
 
                     ProcessFile.writeFile(res.fd, JSON.stringify(data)).then(res => {
-                        conf.RESPONSE.data = {'token': this.renderLoginStr(user_mes.account + '@' + (data.length-1))};
+                        conf.RESPONSE.success = true;
+                        conf.RESPONSE.data = {
+                            'username': user_mes.account,
+                            'token': this.renderLoginStr(user_mes.account + '@' + (data.length-1))};
+
                         reslove(conf.RESPONSE);
+                        this.loginSuccess(data)
                     })
                 })
             }
@@ -105,8 +111,12 @@ module.exports = class Login {
                     data[index].oldDate = new Date().getTime();
                     ProcessFile.writeFile(res.fd, JSON.stringify(data)).then(res => {
                         conf.RESPONSE.success = true;
-                        conf.RESPONSE.data = {'token': this.renderLoginStr(account + '@' + (data.length-1))};
+                        conf.RESPONSE.data = {
+                            'username': account,
+                            'token': this.renderLoginStr(account + '@' + (data.length-1))};
+
                         reslove(conf.RESPONSE);
+                        this.loginSuccess(data)
                     })
                 } else {
                     this.accountErrorHandle(reslove);
@@ -125,10 +135,8 @@ module.exports = class Login {
     };
 
     // 登录成功
-    loginSuccess (userName) {
-        // 用户存入session socket建立
-        Session.push(userName)
-        
+    loginSuccess (data) {
+        Session.add(data)
     }
 
 

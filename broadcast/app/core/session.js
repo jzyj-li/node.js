@@ -3,13 +3,12 @@
 * session 管理
 * */
 
-let SESSION = [];
 const Session = {
-    add (userName) {
-        SESSION.push({userName: userName})
+    add (data) {
+        global.SESSION.concat(data)
     },
     has(userName){
-        SESSION.find(v => {
+        global.SESSION.find(v => {
             return v.userName == userName;
         })
     }

@@ -2,14 +2,28 @@ extends header
 block link
     link(href='/static/css/index.css',rel="stylesheet")
 block content
-    .container
-        .page-header
-            h1 聊天室
-                small 穷人版
-        .page-content
-            .media
-                .media-left
-                    a
-                        img.media-object
-                .media-body
-                    h4.media-heading 好友： 李世民
+    nav.navbar.navbar-inverse
+        .container-fluid
+            .navbar-header
+                a.navbar-brand 在线聊天系统
+
+    .container-fluid
+        .container.chat#chat
+
+            .left.chat-list
+                .item.media(v-for='(item, index) in userList',@click='currentUser(index)',v-bind:class='{active: activeIndex == index }')
+                    .media-left.media-middle
+                        .phone
+                    .media-body.txt
+                        h4.media-heading {{item}}
+                        p {{newsList[index]}}
+            .right
+                .record-list
+
+                .textarea
+                    textarea(placeholder='hello 骚年',v-model='content')
+                    .btn(@click='sendMes()') 发送
+block script
+    script(src='https://cdn.bootcss.com/socket.io/2.1.0/socket.io.js')
+    script(src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js")
+    script(src='/static/js/index.js')

@@ -23,6 +23,7 @@
            type: 'post',
            data: param,
            success: function (res) {
+               sessionStorage.setItem('account', res.data.username)
                if (res.success) {
                    location.href = '/index';
                } else {
